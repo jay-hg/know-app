@@ -35,6 +35,11 @@ const routes = [
         component: () => import('../views/ArticleDetails')
     },
     {
+        path: '/article/gift-vote/:id',
+        name: 'GiftVote',
+        component: () => import('../views/GiftVote')
+    },
+    {
         path: '/upload',
         name: 'Upload',
         component: () => import('../views/Upload')
@@ -58,9 +63,9 @@ const router = new VueRouter({
 })
 
 //路由卫士
-router.beforeEach((to, from, next) => {
-    if (to.name !== 'Login' && !localStorage.getItem("uid")) next({name: 'Login'})
-    else next()
-})
+// router.beforeEach((to, from, next) => {
+//     if (to.name !== 'Login' && !localStorage.getItem("uid")) next({name: 'Login'})
+//     else next()
+// })
 
 export default router
