@@ -28,39 +28,33 @@
       </div>
     </div>
     <div class="content">
-      <div class="content-title">给楚老板送上一份礼物吧</div>
+      <div class="content-title">
+        给{{ data.author.nickname }}送上一份礼物吧
+      </div>
       <van-divider />
       <div class="gifts">
-        <div class="gift-item">
-          <img src="@/assets/荣誉证书.jpg"/>
+        <div
+          class="gift-item"
+          v-for="(item, index) in giftList"
+          :key="index"
+          :class="{ selected: item === selectedItem }"
+          @click="selectItem(item)"
+        >
+          <img :src="require(`@/assets/${item.icon}`)" />
           <div class="gift-title">
-            <h3>荣誉证书</h3>
-            <p>抵658票</p>
-            <p class="addition-vote">(加赠120票)</p>
-          </div>
-        </div>
-        <div class="gift-item">
-          <img src="@/assets/荣誉证书.jpg"/>
-          <div class="gift-title">
-            <h3>荣誉证书</h3>
-            <p>抵658票</p>
-            <p>(加赠120票)</p>
-          </div>
-        </div>
-        <div class="gift-item">
-          <img src="@/assets/荣誉证书.jpg"/>
-          <div class="gift-title">
-            <h3>荣誉证书</h3>
-            <p>抵658票</p>
-            <p>(加赠120票)</p>
+            <h3>{{ item.name }}</h3>
+            <p>抵{{ item.voteCount }}票</p>
+            <p class="addition-vote" v-if="item.additionCount">
+              (加赠{{ item.additionCount }}票)
+            </p>
           </div>
         </div>
       </div>
       <div class="gift-nums" style="float: right">
         <van-stepper
-          v-model="vote_num"
+          v-model="bulkVoteForm.vote_num"
           :min="1"
-          :max="10000"
+          :max="100000000"
           label="描述文字"
         />
       </div>
@@ -68,8 +62,16 @@
 
     <div class="bottom-bar">
       <van-row justify="space-between">
-        <van-col span="17"><p>29元，抵180票</p></van-col>
-        <van-col span="6"><van-button type="success" color="green">微信支付</van-button></van-col>
+        <van-col span="17"
+          ><p>
+            {{ this.bulkVoteForm.price }}元，抵{{ bulkVoteForm.total_vote_num }}票
+          </p></van-col
+        >
+        <van-col span="6"
+          ><van-button type="success" color="green"
+            >微信支付</van-button
+          ></van-col
+        >
       </van-row>
     </div>
 
@@ -85,7 +87,6 @@
 import MarkdownContent from "@/components/MarkdownContent";
 import { Agree, FindArticleById } from "@/api/article";
 import { BASE_RUL } from "@/utils/request";
-import { FindAllComment, SaveComment } from "@/api/comment";
 
 export default {
   components: { MarkdownContent },
@@ -100,13 +101,44 @@ export default {
         { name: "分享海报", icon: "poster" },
         { name: "二维码", icon: "qrcode" },
       ],
+      giftList: [
+        {
+          name: "荣誉证书",
+          icon: "荣誉证书.jpg",
+          voteCount: 658,
+          additionCount: 120,
+          price: 99,
+        },
+        { name: "书签", icon: "书签.png", voteCount: 180, price: 29 },
+        { name: "折扇", icon: "折扇.jpg", voteCount: 280, price: 49 },
+        { name: "诗经", icon: "诗经.jpg", voteCount: 1350, price: 199 },
+        { name: "香炉", icon: "香炉.jpg", voteCount: 2050, price: 299 },
+        {
+          name: "紫砂壶紫砂壶",
+          icon: "紫砂壶.jpg",
+          voteCount: 3450,
+          price: 499,
+        },
+        { name: "奖牌", icon: "奖牌.jpg", voteCount: 4650, price: 666 },
+        { name: "印章", icon: "印章.jpg", voteCount: 6350, price: 888 },
+        {
+          name: "奖杯",
+          icon: "奖杯.jpg",
+          voteCount: 7200,
+          additionCount: 1000,
+          price: 999,
+        },
+      ],
+      selectedItem: null,
       agreeLoading: false,
-      commentForm: {
+      bulkVoteForm: {
         uid: localStorage.getItem("uid"),
         aid: this.$route.params.id,
         content: "",
+        vote_num: 1,
+        price: 0,
+        total_vote_num: 0,
       },
-      commentList: [],
       base: BASE_RUL,
       data: {
         article: {},
@@ -114,17 +146,15 @@ export default {
       },
       content: "",
       show: false,
-      vote_num: 180,
     };
   },
-
+  created() {
+    this.selectItem(this.giftList[0]);
+  },
   mounted() {
     FindArticleById(this.$route.params.id).then((res) => {
       if (res.status) this.data = res.data;
       this.content = this.data.article.content.toString();
-    });
-    FindAllComment(this.$route.params.id).then((res) => {
-      if (res.status) this.commentList = res.data;
     });
   },
 
@@ -132,16 +162,15 @@ export default {
     handleBack() {
       this.$router.back();
     },
-
-    submitComment() {
-      SaveComment(this.commentForm).then((res) => {
-        if (res.status) {
-          this.commentList.push(res.data);
-          this.data.article.commentCount = this.data.article.commentCount + 1;
-          this.$toast.success("感谢你的评论");
-        }
-      });
+    selectItem(item) {
+      this.selectedItem = item;
+      this.bulkVoteForm.price =
+        this.bulkVoteForm.vote_num * this.selectItem.price;
+      this.bulkVoteForm.total_vote_num =
+        (this.selectItem.voteCount + (this.selectItem.additionCount || 0)) *
+        this.vote_num;
     },
+    submitBulkVote() {},
 
     agree() {
       this.agreeLoading = true;
@@ -150,7 +179,7 @@ export default {
           this.data.article.agreeCount = this.data.article.agreeCount + 1;
         }
         setTimeout(() => {
-          this.$toast.success("谢谢你的赞同");
+          this.$toast.success("谢谢你的投票");
           this.agreeLoading = false;
         }, 700);
       });
@@ -238,6 +267,9 @@ export default {
   padding: 2px;
   font-size: 10px;
   text-align: center;
+}
+.selected {
+  border-color: red;
 }
 .gift-item img {
   width: 70%;
