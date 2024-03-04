@@ -56,6 +56,7 @@
           :min="1"
           :max="100000000"
           label="描述文字"
+          @change="updateBills"
         />
       </div>
     </div>
@@ -64,7 +65,9 @@
       <van-row justify="space-between">
         <van-col span="17"
           ><p>
-            {{ this.bulkVoteForm.price }}元，抵{{ bulkVoteForm.total_vote_num }}票
+            {{ this.bulkVoteForm.price }}元，抵{{
+              bulkVoteForm.total_vote_num
+            }}票
           </p></van-col
         >
         <van-col span="6"
@@ -156,6 +159,7 @@ export default {
       if (res.status) this.data = res.data;
       this.content = this.data.article.content.toString();
     });
+    this.updateBills();
   },
 
   methods: {
@@ -164,11 +168,14 @@ export default {
     },
     selectItem(item) {
       this.selectedItem = item;
+      this.updateBills();
+    },
+    updateBills() {
       this.bulkVoteForm.price =
-        this.bulkVoteForm.vote_num * this.selectItem.price;
+        this.bulkVoteForm.vote_num * this.selectedItem.price;
       this.bulkVoteForm.total_vote_num =
-        (this.selectItem.voteCount + (this.selectItem.additionCount || 0)) *
-        this.vote_num;
+        (this.selectedItem.voteCount + (this.selectedItem.additionCount || 0)) *
+        this.bulkVoteForm.vote_num;
     },
     submitBulkVote() {},
 
