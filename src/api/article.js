@@ -42,3 +42,11 @@ export function Agree(id) {
         method: 'get',
     })
 }
+
+export function SubmitBulkVote(id, data) {
+    return service({
+        url: '/article/bulk-vote/' + id,
+        method: 'post',
+        data: data
+    })
+}

@@ -66,12 +66,12 @@
         <van-col span="17"
           ><p>
             {{ this.bulkVoteForm.price }}元，抵{{
-              bulkVoteForm.total_vote_num
+              bulkVoteForm.totalVoteNum
             }}票
           </p></van-col
         >
         <van-col span="6"
-          ><van-button type="success" color="green"
+          ><van-button type="success" color="green" @click="submitBulkVote"
             >微信支付</van-button
           ></van-col
         >
@@ -88,7 +88,7 @@
 
 <script>
 import MarkdownContent from "@/components/MarkdownContent";
-import { Agree, FindArticleById } from "@/api/article";
+import { FindArticleById, SubmitBulkVote } from "@/api/article";
 import { BASE_RUL } from "@/utils/request";
 
 export default {
@@ -133,14 +133,13 @@ export default {
         },
       ],
       selectedItem: null,
-      agreeLoading: false,
       bulkVoteForm: {
         uid: localStorage.getItem("uid"),
         aid: this.$route.params.id,
         content: "",
         vote_num: 1,
         price: 0,
-        total_vote_num: 0,
+        totalVoteNum: 0,
       },
       base: BASE_RUL,
       data: {
@@ -173,21 +172,18 @@ export default {
     updateBills() {
       this.bulkVoteForm.price =
         this.bulkVoteForm.vote_num * this.selectedItem.price;
-      this.bulkVoteForm.total_vote_num =
+      this.bulkVoteForm.totalVoteNum =
         (this.selectedItem.voteCount + (this.selectedItem.additionCount || 0)) *
         this.bulkVoteForm.vote_num;
     },
-    submitBulkVote() {},
-
-    agree() {
-      this.agreeLoading = true;
-      Agree(this.$route.params.id).then((res) => {
+    submitBulkVote() {
+      SubmitBulkVote(this.$route.params.id, this.bulkVoteForm).then((res) => {
         if (res.status) {
-          this.data.article.agreeCount = this.data.article.agreeCount + 1;
+          this.data.article.agreeCount = this.data.article.agreeCount + this.bulkVoteForm.totalVoteNum;
         }
         setTimeout(() => {
-          this.$toast.success("谢谢你的投票");
-          this.agreeLoading = false;
+          this.$toast.success("模拟支付成功");
+          this.$router.push("/article/details/" + this.$route.params.id)
         }, 700);
       });
     },
