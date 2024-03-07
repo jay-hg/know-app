@@ -1,175 +1,134 @@
 <template>
-  <div class="rankings">
-    <div class="podium">
-      <div v-if="players.length > 0" class="first-place">
-        <div class="medal gold">1</div>
-        <div class="player">
-          <van-image
-            class="avatar"
-            round
-            width="37"
-            height="37"
-            :src="base + '/file/image/' + players[0].avatar"
-          />
-          <div class="details">
-            <span class="name">{{ players[0].name }}</span>
-            <span class="votes">{{ players[0].agreeCount }} 票</span>
-          </div>
-        </div>
-      </div>
-      <div v-if="players.length > 1" class="second-place">
-        <div class="medal silver">2</div>
-        <div class="player">
-          <van-image
-            class="avatar"
-            round
-            width="37"
-            height="37"
-            :src="base + '/file/image/' + players[1].avatar"
-          />
-          <div class="details">
-            <span class="name">{{ players[1].name }}</span>
-            <span class="votes">{{ players[1].agreeCount }} 票</span>
-          </div>
-        </div>
-      </div>
-      <div v-if="players.length > 2" class="third-place">
-        <div class="medal bronze">3</div>
-        <div class="player">
-          <van-image
-            class="avatar"
-            round
-            width="37"
-            height="37"
-            :src="base + '/file/image/' + players[2].avatar"
-          />
-          <div class="details">
-            <span class="name">{{ players[2].name }}</span>
-            <span class="votes">{{ players[2].agreeCount }} 票</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="list">
-      <ul>
-        <li v-for="(player, index) in players.slice(3)" :key="index">
-          <div class="player">
-            <span class="rank">{{ index + 4 }}</span>
-            <van-image
+  <div class="user-rank-page">
+    <van-nav-bar
+      title="用户排行榜"
+    />
+
+    <div class="rank-list">
+      <div class="top-three">
+        <div
+          v-for="(user, index) in topThreeList"
+          :key="user.uid"
+          class="rank-item"
+          :class="`rank-${index + 1}`"
+        >
+          <div class="rank-info">
+            <img
+              :src="base + '/file/image/' + user.avatar"
+              alt="头像"
               class="avatar"
-              round
-              width="37"
-              height="37"
-              :src="base + '/file/image/' + player.avatar"
             />
-            <div class="details">
-              <span class="name">{{ player.name }}</span>
-              <span class="votes">{{ player.agreeCount }} 票</span>
+            <div class="rank-text">
+              <div class="name">{{ user.name }}</div>
+              <div class="score">{{ `积分: ${user.score}` }}</div>
             </div>
           </div>
-        </li>
-      </ul>
-      <div v-if="players.length === 0" class="empty-message">暂无数据</div>
+          <div class="medal">
+            <div v-if="index === 0" class="gold-medal">金牌</div>
+            <div v-else-if="index === 1" class="silver-medal">银牌</div>
+            <div v-else-if="index === 2" class="bronze-medal">铜牌</div>
+          </div>
+        </div>
+      </div>
+
+      <van-list v-if="restList.length > 0">
+        <van-cell
+          v-for="(user, index) in restList"
+          :key="user.uid"
+          :title="user.name"
+          :label="`排名: ${index + 4}`"
+          :value="`积分: ${user.score}`"
+          :is-link="true"
+        >
+          <template v-slot:icon>
+            <img
+              :src="base + '/file/image/' + user.avatar"
+              alt="头像"
+              class="avatar"
+            />
+          </template>
+        </van-cell>
+      </van-list>
+
+      <div v-if="rankList.length === 0" class="empty-text">暂无数据</div>
     </div>
   </div>
 </template>
-
 <style>
-.rankings {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.user-rank-page {
+  height: 100%;
+}
+
+.rank-list {
+  text-align: center;
   padding: 20px;
 }
 
-.podium {
+.top-three {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  align-items: flex-end;
 }
 
-.first-place,
-.second-place,
-.third-place {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-}
-
-.medal {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  font-weight: bold;
-  color: #fff;
-  margin-bottom: 10px;
-}
-
-.gold {
-  background-color: gold;
-}
-
-.silver {
-  background-color: silver;
-}
-
-.bronze {
-  background-color: #cd7f32;
-}
-
-.player {
+.rank-item {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.player .img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
+.gold-medal {
+  color: gold;
 }
 
-.details {
+.silver-medal {
+  color: silver;
+}
+
+.bronze-medal {
+  color: #cd7f32;
+}
+
+.rank-1 {
+  background: linear-gradient(to bottom, #ffcc00, #fff);
+  height: 120px;
+}
+
+.rank-2 {
+  background: linear-gradient(to bottom, #c0c0c0, #fff);
+  height: 100px;
+}
+
+.rank-3 {
+  background: linear-gradient(to bottom, #cd7f32, #fff);
+  height: 80px;
+}
+
+.rank-info {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.rank-text {
+  margin-left: 10px;
 }
 
 .name {
   font-weight: bold;
-  margin-bottom: 5px;
 }
 
-.votes {
+.score {
   color: #999;
 }
 
-.list {
-  width: 100%;
-  max-width: 600px;
-}
-
-.list li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.rank {
-  width: 30px;
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.empty-message {
-  margin-top: 20px;
+.empty-text {
   text-align: center;
-  color: #999;
+  margin-top: 20px;
 }
 </style>
 <script>
@@ -178,15 +137,22 @@ import { BASE_RUL } from "@/utils/request";
 export default {
   data() {
     return {
-      players: [],
+      rankList: [],
       base: BASE_RUL,
     };
+  },
+  computed: {
+    topThreeList() {
+      return this.rankList.slice(0, 3);
+    },
+    restList() {
+      return this.rankList.slice(3);
+    },
   },
   mounted() {
     RankList().then((res) => {
       if (res.status) {
-        this.players = res.data;
-        console.log(this.players);
+        this.rankList = res.data;
       }
     });
   },
