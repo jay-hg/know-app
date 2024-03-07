@@ -133,7 +133,6 @@
 import MarkdownContent from "@/components/MarkdownContent";
 import { Agree, FindArticleById } from "@/api/article";
 import { BASE_RUL } from "@/utils/request";
-import { FindAllComment, SaveComment } from "@/api/comment";
 
 export default {
   components: { MarkdownContent },

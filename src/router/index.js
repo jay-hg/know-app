@@ -24,6 +24,10 @@ const routes = [
                 component: () => import('../views/Video')
             },
             {
+                path: 'rank',
+                component: () => import('../views/Rank')
+            },
+            {
                 path: 'me',
                 component: () => import('../views/Me')
             },

@@ -29,11 +29,20 @@ export default {
           path: '/home'
         },
         {
-          icon: 'play-circle',
-          title: '视频',
+          icon: 'gift',
+          title: '奖品',
           path: '/video'
         },
-
+        {
+          icon: 'description',
+          title: '规则',
+          path: '/video'
+        },
+        {
+          icon: 'sort',
+          title: '排行榜',
+          path: '/rank'
+        },
         {
           icon: 'smile',
           title: '我的',
