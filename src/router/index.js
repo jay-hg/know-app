@@ -58,11 +58,6 @@ const routes = [
         component: () => import('../views/Search')
     },
     {
-        path: '/login',
-        name: 'Login',
-        component: () => import('../views/Login')
-    },
-    {
         path: '/wx-login',
         name: 'WxLogin',
         component: () => import('../views/WxLogin')

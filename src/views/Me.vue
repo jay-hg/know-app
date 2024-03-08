@@ -5,7 +5,7 @@
           round
           width="60"
           height="60"
-          :src="base + '/file/image/' + user.avatar"
+          :src="getAvatar(user.avatar)"
       />
       <div class="des">
         <div class="des-name">{{ user.nickname }}</div>
@@ -35,6 +35,7 @@
 
 <script>
 import {BASE_RUL} from "@/utils/request";
+import { getAvatar } from '@/utils/index.js';
 
 export default {
 
@@ -44,6 +45,9 @@ export default {
       user: JSON.parse(localStorage.getItem('user')),
     }
   },
+  methods: {
+    getAvatar
+  }
 
 }
 </script>

@@ -14,7 +14,7 @@
         >
           <div class="rank-info">
             <img
-              :src="base + '/file/image/' + user.avatar"
+              :src="getAvatar(user.avatar)"
               alt="头像"
               class="avatar"
             />
@@ -42,7 +42,7 @@
         >
           <template v-slot:icon>
             <img
-              :src="base + '/file/image/' + user.avatar"
+              :src="getAvatar(user.avatar)"
               alt="头像"
               class="avatar"
             />
@@ -134,6 +134,7 @@
 <script>
 import { RankList } from "@/api/rank";
 import { BASE_RUL } from "@/utils/request";
+import { getAvatar } from '@/utils/index.js';
 export default {
   data() {
     return {
@@ -156,5 +157,8 @@ export default {
       }
     });
   },
+  methods: {
+    getAvatar
+  }
 };
 </script>

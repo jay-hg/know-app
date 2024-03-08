@@ -13,7 +13,7 @@
                       round
                       width="20"
                       height="20"
-                      :src="base + '/file/image/' + item.author.avatar"
+                      :src="getAvatar(item.author.avatar)"
                   />
                   <span class="author-name">{{ item.author.nickname }}</span>
                   <van-icon color="#06f" style="padding-left: 7px;" name="wechat-pay"/>
@@ -51,7 +51,7 @@
                       round
                       width="20"
                       height="20"
-                      :src="base + '/file/image/' + item.author.avatar"
+                      :src="getAvatar(item.author.avatar)"
                   />
                   <span class="author-name">{{ item.author.nickname }}</span>
                   <van-icon color="#06f" style="padding-left: 7px;" name="wechat-pay"/>
@@ -76,6 +76,7 @@
 
 <script>
 import {BASE_RUL} from "@/utils/request";
+import { getAvatar } from '@/utils/index.js';
 
 export default {
   name: "ArticleList",
@@ -89,6 +90,9 @@ export default {
       type: Array,
     }
   },
+  methods: {
+    getAvatar
+  }
 }
 </script>
 
