@@ -183,7 +183,8 @@ export default {
         }
         setTimeout(() => {
           this.$toast.success("模拟支付成功");
-          this.$router.push("/article/details/" + this.$route.params.id)
+          let currentUrl = encodeURIComponent(window.location.href);
+          window.location.replace("/article/details/" + this.$route.params.id);
         }, 700);
       });
     },

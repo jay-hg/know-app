@@ -31,12 +31,12 @@ export default {
         {
           icon: 'gift',
           title: '奖品',
-          path: '/video'
+          path: '/gifts'
         },
         {
           icon: 'description',
           title: '规则',
-          path: '/video'
+          path: '/rules'
         },
         {
           icon: 'sort',

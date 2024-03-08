@@ -63,15 +63,6 @@
           <span class="s1">加票</span>
         </div>
       </van-button>
-      <a @click="show = true" style="float: right">
-        <div class="comments-count">{{ data.article.commentCount }}条评论</div>
-        <van-icon
-          color="#909399"
-          size="25"
-          class="comments-icon"
-          name="chat-o"
-        />
-      </a>
     </div>
     <van-popup
       closeable
@@ -109,14 +100,6 @@
           </div>
         </div>
         <div class="popup-bottom">
-          <label>
-            <input
-              placeholder="发一条友善的评论"
-              v-model="commentForm.content"
-              class="bottom-bar-input"
-            />
-          </label>
-          <div class="popup-bottom-send" @click="submitComment">发布</div>
         </div>
       </div>
     </van-popup>
@@ -169,24 +152,11 @@ export default {
       if (res.status) this.data = res.data;
       this.content = this.data.article.content.toString();
     });
-    FindAllComment(this.$route.params.id).then((res) => {
-      if (res.status) this.commentList = res.data;
-    });
   },
 
   methods: {
     handleBack() {
       this.$router.back();
-    },
-
-    submitComment() {
-      SaveComment(this.commentForm).then((res) => {
-        if (res.status) {
-          this.commentList.push(res.data);
-          this.data.article.commentCount = this.data.article.commentCount + 1;
-          this.$toast.success("感谢你的评论");
-        }
-      });
     },
 
     agree() {

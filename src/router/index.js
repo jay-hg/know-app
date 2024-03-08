@@ -20,8 +20,12 @@ const routes = [
                 component: Home
             },
             {
-                path: 'video',
-                component: () => import('../views/Video')
+                path: 'gifts',
+                component: () => import('../views/Gifts')
+            },
+            {
+                path: 'rules',
+                component: () => import('../views/Rules')
             },
             {
                 path: 'rank',
@@ -58,6 +62,11 @@ const routes = [
         name: 'Login',
         component: () => import('../views/Login')
     },
+    {
+        path: '/wx-login',
+        name: 'WxLogin',
+        component: () => import('../views/WxLogin')
+    },
 ]
 
 const router = new VueRouter({
@@ -66,10 +75,9 @@ const router = new VueRouter({
     routes
 })
 
-//路由卫士
-// router.beforeEach((to, from, next) => {
-//     if (to.name !== 'Login' && !localStorage.getItem("uid")) next({name: 'Login'})
-//     else next()
-// })
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'WxLogin' && !localStorage.getItem("uid")) next({name: 'WxLogin'})
+    else next()
+})
 
 export default router
